@@ -1,7 +1,5 @@
-import { Injectable } from "@nestjs/common";
 import { ContractPricingStrategy, PricingContext, PricingStrategy, TierPricingStrategy } from "./pricing.strategy";
 
-@Injectable()
 export class PricingEngine {
   private readonly strategies: PricingStrategy[] = [
     new ContractPricingStrategy(),
