@@ -1,23 +1,25 @@
 {
   "compilerOptions": {
-    "target": "ES2022",
-    "module": "CommonJS",
-    "moduleResolution": "Node",
-    "outDir": "dist",
+    "target": "es2022",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "outDir": "./dist",
     "rootDir": ".",
     "strict": true,
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "types": ["node", "jest"],
+    "ignoreDeprecations": "5.0",
     "baseUrl": ".",
     "paths": {
       "@shared/*": ["src/shared/*"],
       "@modules/*": ["src/modules/*"]
     }
   },
-  "include": ["src/**/*", "prisma/**/*"],
+  "include": ["src/**/*", "prisma/**/*", "test/**/*"],
   "exclude": ["node_modules", "dist"]
 }

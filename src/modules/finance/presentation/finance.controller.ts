@@ -1,32 +1,37 @@
-import { Body, Controller, Get, Post, Query } from "@nestjs/common";
-import { FinanceService } from "../application/finance.service";
+import { Body, Controller, Get, HttpCode, HttpStatus, Post, Query } from "@nestjs/common";
+import { ApiTags, ApiOperation } from "@nestjs/swagger";
+import { ReceivePaymentUseCase } from "../application/use-cases/receive-payment.use-case";
+import { AutoAllocateUseCase } from "../application/use-cases/auto-allocate.use-case";
+import { GetDebtAgingQuery } from "../application/queries/get-debt-aging.query";
+import { ReceivePaymentDto, AutoAllocateDto } from "./dto/finance.dto";
 
-@Controller("finance")
+@ApiTags("Finance (Tài chính - Công nợ)")
+@Controller("api/v1/finance")
 export class FinanceController {
-  constructor(private readonly service: FinanceService) {}
+  constructor(
+    private readonly receivePayment: ReceivePaymentUseCase,
+    private readonly autoAllocate: AutoAllocateUseCase,
+    private readonly debtAging: GetDebtAgingQuery
+  ) {}
 
-  @Post("debt")
-  recordDebt(@Body() body: any) {
-    return this.service.recordDebt(body);
+  @Post("payments")
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: "Ghi nhận khoản thanh toán từ khách hàng" })
+  receive(@Body() dto: ReceivePaymentDto) {
+    const userId = "00000000-0000-0000-0000-000000000000"; // Fake User ID
+    return this.receivePayment.execute(dto, userId);
   }
 
-  @Post("credit-limit/check")
-  checkCredit(@Body() body: any) {
-    return this.service.checkCreditLimit(body.partnerId, body.orderValue);
+  @Post("payments/auto-allocate")
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: "Tự động phân bổ thanh toán vào các công nợ cũ nhất (FIFO)" })
+  allocate(@Body() dto: AutoAllocateDto) {
+    return this.autoAllocate.execute(dto);
   }
 
-  @Post("payments/allocate")
-  allocate(@Body() body: any) {
-    return this.service.allocatePayment(body);
-  }
-
-  @Get("aging")
-  aging(@Query("partnerId") partnerId?: string) {
-    return this.service.agingReport(partnerId);
-  }
-
-  @Post("periods/close")
-  close(@Body() body: any) {
-    return this.service.closePeriod(body.periodName, body.closedBy);
+  @Get("reports/debt-aging")
+  @ApiOperation({ summary: "Xem báo cáo tuổi nợ (CQRS)" })
+  getReport(@Query("partnerId") partnerId?: string) {
+    return this.debtAging.execute(partnerId);
   }
 }

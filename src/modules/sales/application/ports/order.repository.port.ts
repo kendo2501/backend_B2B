@@ -1,5 +1,10 @@
-export abstract class OrderRepositoryPort {
-  abstract findById(id: string): Promise<any>;
-  abstract save(order: any): Promise<any>;
-  abstract saveShipment(shipment: any): Promise<any>;
+export const ORDER_REPOSITORY_PORT = Symbol("ORDER_REPOSITORY_PORT");
+
+export interface IOrderRepository {
+  createOrder(orderNumber: string, data: any, createdBy: string): Promise<any>;
+  getOrderById(orderId: string): Promise<any>;
+  updateOrderStatusAndOutbox(orderId: string, status: string, eventPayload: any): Promise<void>;
+  
+  // Dành riêng cho luồng Giao hàng
+  saveShipmentAndOutbox(shipmentData: any, eventPayload: any): Promise<any>;
 }

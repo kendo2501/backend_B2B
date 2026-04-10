@@ -17,7 +17,9 @@ export class PrismaProductRepository implements ProductRepositoryPort {
         baseUnit: input.baseUnit,
         displayUnit: input.displayUnit,
         attributes: input.attributes,
-        isActive: input.isActive
+        isActive: input.isActive,
+        standardCost: input.standardCost,
+        listPrice: input.listPrice
       }
     });
     return this.map(row);
@@ -33,7 +35,9 @@ export class PrismaProductRepository implements ProductRepositoryPort {
         baseUnit: input.baseUnit,
         displayUnit: input.displayUnit,
         attributes: input.attributes,
-        isActive: input.isActive
+        isActive: input.isActive,
+        standardCost: input.standardCost,
+        listPrice: input.listPrice
       }
     });
     return this.map(row);

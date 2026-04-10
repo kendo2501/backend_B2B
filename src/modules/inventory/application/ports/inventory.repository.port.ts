@@ -1,7 +1,25 @@
 import { StockLedgerEntity } from "../../domain/stock-ledger.entity";
 
-export interface InventoryRepositoryPort {
-  getInventory(productId: string, warehouseId: string): Promise<{ availableQuantity: string; reservedQuantity: string } | null>;
-  upsertInventory(productId: string, warehouseId: string, deltaAvailable: string, deltaReserved: string): Promise<void>;
-  appendLedger(entry: StockLedgerEntity): Promise<StockLedgerEntity>;
+export const INVENTORY_REPOSITORY_PORT = Symbol("INVENTORY_REPOSITORY_PORT");
+
+export interface IInventoryRepository {
+  getInventory(productId: string, warehouseId: string): Promise<any>;
+
+  executeReserveTransaction(
+    productId: string, 
+    warehouseId: string, 
+    deltaAvailable: string, 
+    deltaReserved: string, 
+    ledger: StockLedgerEntity,
+    eventPayload: any
+  ): Promise<void>;
+
+  executeDeductTransaction(
+    productId: string, 
+    warehouseId: string, 
+    deltaAvailable: string, 
+    deltaReserved: string, 
+    ledger: StockLedgerEntity,
+    eventPayload: any
+  ): Promise<void>;
 }

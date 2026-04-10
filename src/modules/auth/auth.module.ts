@@ -2,6 +2,8 @@ import { Module } from "@nestjs/common";
 import { JwtModule } from "@nestjs/jwt";
 import { AuthController } from "./presentation/auth.controller";
 import { AuthService } from "./application/auth.service";
+import { AUTH_REPOSITORY } from "./application/ports/auth.repository.port";
+import { PrismaAuthRepository } from "./infrastructure/prisma-auth.repository";
 
 @Module({
   imports: [
@@ -11,7 +13,14 @@ import { AuthService } from "./application/auth.service";
     })
   ],
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [
+    AuthService,
+    // Đăng ký Provider map Interface với Prisma Adapter
+    {
+      provide: AUTH_REPOSITORY,
+      useClass: PrismaAuthRepository,
+    }
+  ],
   exports: [AuthService]
 })
 export class AuthModule {}
